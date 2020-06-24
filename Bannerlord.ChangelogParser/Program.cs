@@ -82,7 +82,7 @@ namespace Bannerlord.ChangelogParser
                     return result;
                 }
 
-                result.Description += line + Environment.NewLine;
+                result.Description += line + "\r\n";
                 reader.ReadLine();
             }
 
