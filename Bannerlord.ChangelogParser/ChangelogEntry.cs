@@ -7,7 +7,6 @@
         public string Description { get; set; } = default!;
 
         public override string ToString() => $@"For {string.Join('/', SupportedGameVersions)}
-{string.Join('/', SupportedGameVersions)}
 {Description}";
     }
 }
