@@ -27,12 +27,12 @@ namespace Bannerlord.ChangelogParser
                 if (o.Version == null)
                 {
                     var first = changelogs.First();
-                    Console.Write(first.Description);
+                    Console.Write(first.ToString());
                 }
                 else
                 {
                     var find = changelogs.FirstOrDefault(x => x.Version == o.Version);
-                    Console.Write(find != null ? find.Description : "NOT FOUND");
+                    Console.Write(find != null ? find.ToString() : "NOT FOUND");
                 }
             })
             .WithNotParsed(e =>
@@ -60,30 +60,28 @@ namespace Bannerlord.ChangelogParser
         {
             var result = new ChangelogEntry();
 
+            var builder = new StringBuilder();
             string? line;
             while ((line = reader.PeekLine()) != null)
             {
-                if (line.StartsWith("Version:"))
+                switch (line)
                 {
-                    result.Version = line.Replace("Version:", "").Trim();
-                    reader.ReadLine();
-                    continue;
+                    case { } str when str.StartsWith("Version:"):
+                        result.Version = line.Replace("Version:", "").Trim();
+                        reader.ReadLine();
+                        continue;
+                    case { } str when str.StartsWith("Game Versions:"):
+                        result.SupportedGameVersions = line.Replace("Game Versions:", "").Trim().Split(',', StringSplitOptions.RemoveEmptyEntries);
+                        reader.ReadLine();
+                        continue;
+                    case { } str when str.StartsWith("-"):
+                        result.Description = builder.ToString();
+                        return result;
+                    default:
+                        builder.AppendLine(line);
+                        reader.ReadLine();
+                        continue;
                 }
-
-                if (line.StartsWith("Game Versions:"))
-                {
-                    result.SupportedGameVersions = line.Replace("Game Versions:", "").Trim().Split(',', StringSplitOptions.RemoveEmptyEntries);
-                    reader.ReadLine();
-                    continue;
-                }
-
-                if (line.StartsWith("-"))
-                {
-                    return result;
-                }
-
-                result.Description += line + "\r\n";
-                reader.ReadLine();
             }
 
             return null;
