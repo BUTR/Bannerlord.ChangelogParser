@@ -28,5 +28,13 @@ jobs:
     - name: Pack Bannerlord.ChangelogParser (Release)
       run: dotnet pack Bannerlord.ChangelogParser/Bannerlord.ChangelogParser.csproj --configuration Release -o "./packages" 
 
-    - name: Push with dotnet
-      run: dotnet nuget push "./packages/*.nupkg"
+    #- name: Push with dotnet
+    #  run: dotnet nuget push "./packages/*.nupkg"
+
+    - name: Publish (workaround)
+      run: |
+           for f in ./packages/*.nupkg
+           do
+             curl -vX PUT -u "vslee:${{secrets.GITHUB_TOKEN}}" -F package=@$f https://nuget.pkg.github.com/BUTR/
+           done
+      shell: bash
