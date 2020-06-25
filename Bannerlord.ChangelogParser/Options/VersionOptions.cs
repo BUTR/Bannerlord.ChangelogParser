@@ -2,8 +2,8 @@
 
 namespace Bannerlord.ChangelogParser.Options
 {
-    [Verb("getversion", HelpText = "Get latest entry version.")]
-    public class VersionOptions 
+    [Verb("latestversion", HelpText = "Get latest entry version.")]
+    internal class LatestVersionOptions 
     {
         [Option('f', "file", Required = true)]
         public string ChangelogPath { get; set; } = default!;

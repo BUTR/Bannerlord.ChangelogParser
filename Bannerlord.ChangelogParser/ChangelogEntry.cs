@@ -6,7 +6,7 @@
         public string[] SupportedGameVersions { get; set; }= default!;
         public string Description { get; set; } = default!;
 
-        public override string ToString() => $@"For {string.Join('/', SupportedGameVersions)}
+        public string GetFullDescription() => $@"For {string.Join('/', SupportedGameVersions)}
 {Description}";
     }
 }

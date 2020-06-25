@@ -14,25 +14,60 @@ namespace Bannerlord.ChangelogParser
     {
         public static void Main(string[] args) => Parser
             .Default
-            .ParseArguments<VersionOptions, DescriptionOptions>(args)
-            .WithParsed<VersionOptions>(o =>
+            .ParseArguments<LatestVersionOptions, DescriptionOptions>(args)
+            .WithParsed<LatestVersionOptions>(o =>
             {
-                var changelogs = GetChangelogEntries(o.ChangelogPath);
-                var first = changelogs.First();
-                Console.Write(first.Version);
+                var latestVersion = GetChangelogEntries(o.ChangelogPath)
+                    .OrderByDescending(x => x.Version, new AlphanumComparatorFast())
+                    .First();
+                Console.Write(latestVersion.Version);
             })
             .WithParsed<DescriptionOptions>(o =>
             {
-                var changelogs = GetChangelogEntries(o.ChangelogPath);
                 if (o.Version == null)
                 {
-                    var first = changelogs.First();
-                    Console.Write(first.ToString());
+                    var latestVersion = GetChangelogEntries(o.ChangelogPath)
+                        .OrderByDescending(x => x.Version, new AlphanumComparatorFast())
+                        .First();
+                    Console.Write(latestVersion.Description);
                 }
                 else
                 {
-                    var find = changelogs.FirstOrDefault(x => x.Version == o.Version);
-                    Console.Write(find != null ? find.ToString() : "NOT FOUND");
+                    var find = GetChangelogEntries(o.ChangelogPath)
+                        .FirstOrDefault(x => x.Version == o.Version);
+                    Console.Write(find != null ? find.Description : "NOT FOUND");
+                }
+            })
+            .WithParsed<FullDescriptionOptions>(o =>
+            {
+                if (o.Version == null)
+                {
+                    var latestVersion = GetChangelogEntries(o.ChangelogPath)
+                        .OrderByDescending(x => x.Version, new AlphanumComparatorFast())
+                        .First();
+                    Console.Write(latestVersion.GetFullDescription());
+                }
+                else
+                {
+                    var find = GetChangelogEntries(o.ChangelogPath)
+                        .FirstOrDefault(x => x.Version == o.Version);
+                    Console.Write(find != null ? find.GetFullDescription() : "NOT FOUND");
+                }
+            })
+            .WithParsed<GameVersionOptions>(o =>
+            {
+                if (o.Version == null)
+                {
+                    var latestVersion = GetChangelogEntries(o.ChangelogPath)
+                        .OrderByDescending(x => x.Version, new AlphanumComparatorFast())
+                        .First();
+                    Console.Write(string.Join(',', latestVersion.SupportedGameVersions));
+                }
+                else
+                {
+                    var find = GetChangelogEntries(o.ChangelogPath)
+                        .FirstOrDefault(x => x.Version == o.Version);
+                    Console.Write(find != null ? string.Join(',', find.SupportedGameVersions) : "NOT FOUND");
                 }
             })
             .WithNotParsed(e =>
@@ -40,9 +75,11 @@ namespace Bannerlord.ChangelogParser
                 Console.Write("INVALID COMMAND");
             });
 
-        private static IEnumerable<ChangelogEntry> GetChangelogEntries(string path)
+        private static IEnumerable<ChangelogEntry> GetChangelogEntries(string path) => 
+            GetChangelogEntries(new MemoryStream(Encoding.UTF8.GetBytes(File.ReadAllText(path))));
+        private static IEnumerable<ChangelogEntry> GetChangelogEntries(Stream stream)
         {
-            var reader = new PeekingStreamReader(new MemoryStream(Encoding.UTF8.GetBytes(File.ReadAllText(path))));
+            var reader = new PeekingStreamReader(stream);
 
             string? line;
             while ((line = reader.PeekLine()) != null)
