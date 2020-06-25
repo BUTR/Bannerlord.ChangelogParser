@@ -15,12 +15,19 @@ dotnet tool install -g Bannerlord.ChangelogParser
 ### Example
 When installed as a global tool:
 ```shell
-bannerlord_changelog_parser getversion -f "$PWD/changelog.txt")
-bannerlord_changelog_parser getdescription -f "$PWD/changelog.txt"
-bannerlord_changelog_parser getdescription -v "3.1.0" -f "$PWD/changelog.txt"
+bannerlord_changelog_parser latestversion -f "$PWD/changelog.txt"
+
+bannerlord_changelog_parser description -f "$PWD/changelog.txt"
+bannerlord_changelog_parser description -v "3.1.0" -f "$PWD/changelog.txt"
+
+bannerlord_changelog_parser fulldescription -f "$PWD/changelog.txt"
+bannerlord_changelog_parser fulldescription -v "3.1.0" -f "$PWD/changelog.txt"
+
+bannerlord_changelog_parser gameversion -f "$PWD/changelog.txt"
+bannerlord_changelog_parser gameversion -v "3.1.0" -f "$PWD/changelog.txt"
 ```
   
-Check [this](https://github.com/Aragas/Bannerlord.MBOptionScreen/blob/ff921182721919055cb74d19d12ddb6eda74d679/.github/workflows/test-and-publish.yml#L255-L276) for a workflow example.
+Check [this](https://github.com/Aragas/Bannerlord.MBOptionScreen/blob/700eb1dd1aec531cfaac242f8273c7a5d58ca6e0/.github/workflows/test-and-publish.yml#L255-L276) for a workflow example.
 
 ### Changelog Format
 ```txt
