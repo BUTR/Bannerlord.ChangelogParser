@@ -47,7 +47,7 @@ Game Versions: e1.4.0,e1.4.1,e1.4.2
 ---------------------------------------------------------------------------------------------------
 ```
 
-### Description command output
+### fulldescription command output
 ```txt
 For e1.4.0/e1.4.1/e1.4.2
 * Fixed Group translation bug
