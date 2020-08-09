@@ -14,7 +14,7 @@ namespace Bannerlord.ChangelogParser
     {
         public static void Main(string[] args) => Parser
             .Default
-            .ParseArguments<LatestVersionOptions, DescriptionOptions>(args)
+            .ParseArguments<LatestVersionOptions, DescriptionOptions, FullDescriptionOptions, GameVersionOptions>(args)
             .WithParsed<LatestVersionOptions>(o =>
             {
                 var latestVersion = GetChangelogEntries(o.ChangelogPath)
