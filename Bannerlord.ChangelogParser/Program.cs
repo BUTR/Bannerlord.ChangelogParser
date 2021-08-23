@@ -75,7 +75,7 @@ namespace Bannerlord.ChangelogParser
                 Console.Write("INVALID COMMAND");
             });
 
-        private static IEnumerable<ChangelogEntry> GetChangelogEntries(string path) => 
+        private static IEnumerable<ChangelogEntry> GetChangelogEntries(string path) =>
             GetChangelogEntries(new MemoryStream(Encoding.UTF8.GetBytes(File.ReadAllText(path))));
         private static IEnumerable<ChangelogEntry> GetChangelogEntries(Stream stream)
         {
