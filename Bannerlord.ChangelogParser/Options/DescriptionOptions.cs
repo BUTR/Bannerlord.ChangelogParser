@@ -3,7 +3,7 @@
 namespace Bannerlord.ChangelogParser.Options
 {
     [Verb("description", HelpText = "Get entry description.")]
-    internal class DescriptionOptions 
+    internal class DescriptionOptions
     {
         [Option('v', "version", Required = false)]
         public string? Version { get; set; }
