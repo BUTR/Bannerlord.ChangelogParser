@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,9 @@ namespace Bannerlord.ChangelogParser.Test
 {
     public class Tests
     {
+        private static string NL => Environment.NewLine;
         private static Stream FromString(string str) => new MemoryStream(Encoding.UTF8.GetBytes(str));
+       
 
         [Test]
         public void StandardOneValid()
@@ -75,7 +78,7 @@ Game Versions: e1.4.3
 
             Assert.AreEqual("1.0.0", result.Version);
             Assert.AreEqual(new[] { "e1.4.3" }, result.SupportedGameVersions);
-            Assert.AreEqual("* Line\r\n\r\n* Line", result.Description);
+            Assert.AreEqual($"* Line{NL}{NL}* Line", result.Description);
         }
 
         [Test]
