@@ -75,9 +75,9 @@ namespace Bannerlord.ChangelogParser
                 Console.Write("INVALID COMMAND");
             });
 
-        private static IEnumerable<ChangelogEntry> GetChangelogEntries(string path) =>
+        public static IEnumerable<ChangelogEntry> GetChangelogEntries(string path) =>
             GetChangelogEntries(new MemoryStream(Encoding.UTF8.GetBytes(File.ReadAllText(path))));
-        private static IEnumerable<ChangelogEntry> GetChangelogEntries(Stream stream)
+        public static IEnumerable<ChangelogEntry> GetChangelogEntries(Stream stream)
         {
             var reader = new PeekingStreamReader(stream);
 
@@ -91,11 +91,17 @@ namespace Bannerlord.ChangelogParser
                     if (changelogEntry != null)
                         yield return changelogEntry;
                 }
+                else
+                {
+                    reader.ReadLine();
+                }
             }
         }
-        private static ChangelogEntry? ReadChangeLogEntry(PeekingStreamReader reader)
+        public static ChangelogEntry? ReadChangeLogEntry(PeekingStreamReader reader)
         {
-            var result = new ChangelogEntry();
+            var version = string.Empty;
+            var supportedGameVersions = Array.Empty<string>();
+            var description = string.Empty;
 
             var builder = new StringBuilder();
             string? line;
@@ -104,16 +110,16 @@ namespace Bannerlord.ChangelogParser
                 switch (line)
                 {
                     case { } str when str.StartsWith("Version:"):
-                        result.Version = line.Replace("Version:", "").Trim();
+                        version = line.Replace("Version:", "").Trim();
                         reader.ReadLine();
                         continue;
                     case { } str when str.StartsWith("Game Versions:"):
-                        result.SupportedGameVersions = line.Replace("Game Versions:", "").Trim().Split(',', StringSplitOptions.RemoveEmptyEntries);
+                        supportedGameVersions = line.Replace("Game Versions:", "").Trim().Split(',', StringSplitOptions.RemoveEmptyEntries);
                         reader.ReadLine();
                         continue;
                     case { } str when str.StartsWith("-"):
-                        result.Description = builder.ToString();
-                        return result;
+                        description = builder.ToString().Trim('\r', '\n');
+                        return new ChangelogEntry(version, supportedGameVersions, description);
                     default:
                         builder.AppendLine(line);
                         reader.ReadLine();

@@ -3,9 +3,9 @@ using System.IO;
 
 namespace Bannerlord.ChangelogParser
 {
-    internal class PeekingStreamReader : StreamReader
+    public class PeekingStreamReader : StreamReader
     {
-        private readonly Queue<string?> _peeks = new Queue<string?>();
+        private readonly Queue<string?> _peeks = new();
 
         public PeekingStreamReader(Stream stream) : base(stream) { }
 
